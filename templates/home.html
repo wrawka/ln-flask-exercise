@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>This is a home page.</title>
+    </head>
+    
+    <body>
+        <h1>This is a home page.</h1>
+        
+        <p>Hello {{ context.name }}!</p>
+
+        <!-- <label for="url-form">URL input</label> -->
+        <form action="your-url" name="url-form" method="post">
+            <label for="url">URL input field</label>
+            <input type="url" name="url" value="" required>
+            <br>
+            <label for="slug">Short code for URL</label>
+            <input type="text" name="slug" value="" required>
+            <br>
+            <input type="submit" value="SEND">
+        </form>
+    </body>
+</html>
