@@ -8,8 +8,9 @@
         <h1>This is a home page.</h1>
         
         <p>Hello {{ context.name }}!</p>
-
-        <!-- <label for="url-form">URL input</label> -->
+        {% for msg in get_flashed_messages() %}
+        <h2>{{ msg }}</h2>
+        {% endfor %}
         <form action="your-url" name="url-form" method="post">
             <label for="url">URL input field</label>
             <input type="url" name="url" value="" required>
@@ -17,7 +18,26 @@
             <label for="slug">Short code for URL</label>
             <input type="text" name="slug" value="" required>
             <br>
+            <input type="submit" value="SHORTEN">
+        </form>
+        <form action="your-url" name="url-form" method="post" enctype="multipart/form-data">
+            <label for="file">File upload</label>
+            <input type="file" name="file" value="" required>
+            <br>
+            <label for="slug">Short code for file access</label>
+            <input type="text" name="slug" value="" required>
+            <br>
             <input type="submit" value="SEND">
         </form>
+
+        {% if context.slugs %}
+        <ul>
+            {% for slug in context.slugs %}
+            <a href="{{ url_for('redirect_to_url', slug=slug) }}">
+                <li>{{ slug }}</li>
+            </a>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </body>
 </html>
