@@ -1,15 +1,16 @@
 import json
 import os
-from flask import abort, Flask, flash, render_template, request, redirect, url_for, session, jsonify
+
+from flask import (Blueprint, abort, flash, jsonify, redirect, render_template,
+                   request, session, url_for)
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
-app.secret_key = 'random_string'
+bp = Blueprint('urlshort', __name__)
 
 URLS_FILE = 'urls.json'
 
 
-@app.route('/')
+@bp.route('/')
 def home():
     context = {
         'name': 'Potato',
@@ -18,7 +19,7 @@ def home():
     return render_template('home.html', context=context)
 
 
-@app.route('/your-url', methods=['GET', 'POST'])
+@bp.route('/your-url', methods=['GET', 'POST'])
 def your_url():
     if request.method == 'POST':
         urls = {}
@@ -52,12 +53,12 @@ def your_url():
     return redirect('/')
 
 
-@app.route('/api')
+@bp.route('/api')
 def session_api():
     return jsonify(list(session.keys()))
 
 
-@app.route('/<string:slug>')
+@bp.route('/<string:slug>')
 def redirect_to_url(slug):
     if os.path.exists(URLS_FILE):
         with open(URLS_FILE, 'r') as url_file:
@@ -70,6 +71,6 @@ def redirect_to_url(slug):
     return abort(404)
 
 
-@app.errorhandler(404)
+@bp.errorhandler(404)
 def page_not_foud(error):
     return render_template('page_not_found.html'), 404

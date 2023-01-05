@@ -33,7 +33,7 @@
         {% if context.slugs %}
         <ul>
             {% for slug in context.slugs %}
-            <a href="{{ url_for('redirect_to_url', slug=slug) }}">
+            <a href="{{ url_for('urlshort.redirect_to_url', slug=slug) }}">
                 <li>{{ slug }}</li>
             </a>
             {% endfor %}
