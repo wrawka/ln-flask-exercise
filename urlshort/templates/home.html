@@ -1,43 +1,57 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>This is a home page.</title>
-    </head>
-    
-    <body>
-        <h1>This is a home page.</h1>
-        
-        <p>Hello {{ context.name }}!</p>
-        {% for msg in get_flashed_messages() %}
-        <h2>{{ msg }}</h2>
+{% extends "base.html" %}
+{% block title %}This is a home page.{% endblock %}
+{% block content %}
+<h1>Welcome.</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <button type="button" data-bs-dismiss="alert" class="btn-close" aria-label="Close"></button>
+    {% for msg in messages %}
+    <h2>{{ msg }}</h2>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<div class="container">
+  <div class="row mb-3">
+  <div class="col card p-3 me-3">
+    <form action="your-url" name="url-form" method="post">
+      <div class="mb-3">
+        <label class="form-label" for="formUrl">URL input field</label>
+        <input class="form-control" type="url" name="formUrl" value="http://" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="formSlug">Short code for URL access</label>
+        <input class="form-control" type="text" name="formSlug" value="" required>
+      </div>
+      <input class="btn btn-primary" type="submit" value="SHORTEN">
+    </form>
+  </div>
+  <div class="col card p-3">
+    <form action="your-url" name="url-form" method="post" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label" for="formFile">File upload</label>
+        <input class="form-control" type="file" id="formFile" value="" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" for="formSlug">Short code for file access</label>
+        <input class="form-control" type="text" id="formSlug" value="" required>
+      </div>
+      <input class="btn btn-primary" type="submit" value="SEND">
+    </form>
+  </div>
+  </div>
+  {% if context.slugs %}
+  <div class="row justify-content-md-center">
+    <div class="card p-3">
+      <h5 class="card-title">Your recently created slugs</h5>
+      <div class="list-group list-group-flush">
+        {% for slug in context.slugs %}
+        <a href="{{ url_for('urlshort.redirect_to_url', slug=slug) }}" class="list-group-item list-group-item-action">{{ slug }}</a>
         {% endfor %}
-        <form action="your-url" name="url-form" method="post">
-            <label for="url">URL input field</label>
-            <input type="url" name="url" value="" required>
-            <br>
-            <label for="slug">Short code for URL</label>
-            <input type="text" name="slug" value="" required>
-            <br>
-            <input type="submit" value="SHORTEN">
-        </form>
-        <form action="your-url" name="url-form" method="post" enctype="multipart/form-data">
-            <label for="file">File upload</label>
-            <input type="file" name="file" value="" required>
-            <br>
-            <label for="slug">Short code for file access</label>
-            <input type="text" name="slug" value="" required>
-            <br>
-            <input type="submit" value="SEND">
-        </form>
-
-        {% if context.slugs %}
-        <ul>
-            {% for slug in context.slugs %}
-            <a href="{{ url_for('urlshort.redirect_to_url', slug=slug) }}">
-                <li>{{ slug }}</li>
-            </a>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </body>
-</html>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
